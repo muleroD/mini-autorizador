@@ -28,9 +28,9 @@ public class CartaoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "operation.card.create.success",
                     content = @Content(schema = @Schema(implementation = CartaoDTO.class))),
-            @ApiResponse(responseCode = "422", description = "operation.card.create.unprocessableEntity",
+            @ApiResponse(responseCode = "422", description = "operation.common.unprocessableEntity",
                     content = @Content(schema = @Schema(implementation = CartaoDTO.class))),
-            @ApiResponse(responseCode = "401", description = "operation.card.create.unauthorized",
+            @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
     public ResponseEntity<CartaoDTO> criarCartao(@Valid @RequestBody CartaoDTO cartaoDTO) {
@@ -42,9 +42,9 @@ public class CartaoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "operation.card.balance.success",
                     content = @Content(schema = @Schema(implementation = BigDecimal.class))),
-            @ApiResponse(responseCode = "404", description = "operation.card.balance.notFound",
+            @ApiResponse(responseCode = "404", description = "operation.common.notFound",
                     content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "401", description = "operation.card.balance.unauthorized",
+            @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
     public ResponseEntity<BigDecimal> obterSaldo(@PathVariable String numeroCartao) {
