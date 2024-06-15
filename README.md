@@ -77,9 +77,10 @@ Este projeto inclui testes automatizados para garantir a qualidade e o correto f
 
 ## Desafios Opcionais
 
-- Implementar a solução sem utilizar `if`. 
+- Implementar a solução sem utilizar `if`.
 - Garantir que transações simultâneas não causem problemas de concorrência. Por exemplo, se um cartão possui R$10.00 de
-  saldo e duas transações de R$10.00 são realizadas simultaneamente, o sistema deve lidar corretamente com essa situação.
+  saldo e duas transações de R$10.00 são realizadas simultaneamente, o sistema deve lidar corretamente com essa
+  situação.
 
 ## Como Executar o Projeto
 

@@ -1,29 +1,57 @@
 package br.com.mulero.miniautorizador.infrastructure.handler;
 
+import br.com.mulero.miniautorizador.infrastructure.config.I18nConfig;
 import br.com.mulero.miniautorizador.infrastructure.exception.CartaoExistenteException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ResourceBundle;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle(I18nConfig.DEFAULT_DIRECTORY,
+            LocaleContextHolder.getLocale());
 
     @ExceptionHandler(CartaoExistenteException.class)
     public ResponseEntity<Object> handleCartaoExistenteException(CartaoExistenteException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getCartaoDTO());
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ProblemDetail> handleConstraintViolationException(ConstraintViolationException ex) {
+        return buildProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        String messages = ex.getBindingResult().getAllErrors().stream()
+                .map(ObjectError::getDefaultMessage)
+                .reduce((m1, m2) -> m1 + " | " + m2)
+                .orElse(ex.getMessage());
+
+        return buildProblemDetail(HttpStatus.BAD_REQUEST, messages, ex);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleException(Exception ex) {
+        return buildProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, resourceBundle.getString("error.internal.server"), ex);
+    }
+
+    private ResponseEntity<ProblemDetail> buildProblemDetail(HttpStatus status, String message, Exception ex) {
         log.error(ex.getMessage(), ex);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        problemDetail.setProperty("exception", ex);
-        return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, message);
+        return new ResponseEntity<>(problemDetail, status);
     }
 
 }
