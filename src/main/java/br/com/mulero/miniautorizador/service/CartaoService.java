@@ -17,18 +17,20 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class CartaoService {
 
+    public static final BigDecimal SALDO_INICIAL = BigDecimal.valueOf(500);
+
     private final CartaoRepository cartaoRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<CartaoDTO> salvar(CartaoDTO cartaoDTO) {
-        Cartao cartao = Cartao.builder().numero(cartaoDTO.numeroCartao()).build();
+        Cartao cartao = Cartao.builder().numero(cartaoDTO.getNumeroCartao()).build();
 
         cartaoRepository.findOne(cartao.toExample()).ifPresent(c -> {
             throw new CartaoExistenteException(cartaoDTO);
         });
 
-        cartao.setSenha(cartaoDTO.senha());
-        cartao.setSaldo(BigDecimal.valueOf(500));
+        cartao.setSenha(cartaoDTO.getSenha());
+        cartao.setSaldo(SALDO_INICIAL);
         cartaoRepository.save(cartao);
 
         return ResponseEntity.status(CREATED).body(cartaoDTO);
