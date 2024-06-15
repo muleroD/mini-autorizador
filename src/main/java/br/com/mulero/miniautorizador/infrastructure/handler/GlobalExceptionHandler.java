@@ -1,7 +1,7 @@
 package br.com.mulero.miniautorizador.infrastructure.handler;
 
 import br.com.mulero.miniautorizador.infrastructure.config.I18nConfig;
-import br.com.mulero.miniautorizador.infrastructure.exception.CartaoExistenteException;
+import br.com.mulero.miniautorizador.infrastructure.exception.CardAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -22,9 +22,9 @@ public class GlobalExceptionHandler {
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle(I18nConfig.DEFAULT_DIRECTORY,
             LocaleContextHolder.getLocale());
 
-    @ExceptionHandler(CartaoExistenteException.class)
-    public ResponseEntity<Object> handleCartaoExistenteException(CartaoExistenteException ex) {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getCartaoDTO());
+    @ExceptionHandler(CardAlreadyExistsException.class)
+    public ResponseEntity<Object> handleCardAlreadyExistsException(CardAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getCardDTO());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
