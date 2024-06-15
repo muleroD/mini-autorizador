@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: MiniAutorizador
+  datasource:
+    url: jdbc:mysql://localhost:3306/miniautorizador
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
