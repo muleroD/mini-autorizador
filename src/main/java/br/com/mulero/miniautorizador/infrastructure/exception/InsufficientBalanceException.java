@@ -3,5 +3,5 @@ package br.com.mulero.miniautorizador.infrastructure.exception;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class SaldoInsuficienteException extends TransacaoException {
+public class InsufficientBalanceException extends TransactionException {
 }

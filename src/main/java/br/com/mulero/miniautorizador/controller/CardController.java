@@ -1,7 +1,7 @@
 package br.com.mulero.miniautorizador.controller;
 
-import br.com.mulero.miniautorizador.dto.CartaoDTO;
-import br.com.mulero.miniautorizador.service.CartaoService;
+import br.com.mulero.miniautorizador.dto.CardDTO;
+import br.com.mulero.miniautorizador.service.CardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,25 +19,25 @@ import java.math.BigDecimal;
 @RequestMapping("/cartoes")
 @Tag(name = "operation.card", description = "operation.card.description")
 @RequiredArgsConstructor
-public class CartaoController {
+public class CardController {
 
-    private final CartaoService cartaoService;
+    private final CardService cardService;
 
     @PostMapping
     @Operation(summary = "operation.card.create.summary")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "operation.card.create.success",
-                    content = @Content(schema = @Schema(implementation = CartaoDTO.class))),
+                    content = @Content(schema = @Schema(implementation = CardDTO.class))),
             @ApiResponse(responseCode = "422", description = "operation.common.unprocessableEntity",
-                    content = @Content(schema = @Schema(implementation = CartaoDTO.class))),
+                    content = @Content(schema = @Schema(implementation = CardDTO.class))),
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<CartaoDTO> criarCartao(@Valid @RequestBody CartaoDTO cartaoDTO) {
-        return cartaoService.salvar(cartaoDTO);
+    public ResponseEntity<CardDTO> create(@Valid @RequestBody CardDTO cardDTO) {
+        return cardService.create(cardDTO);
     }
 
-    @GetMapping("/{numeroCartao}")
+    @GetMapping("/{cardNumber}")
     @Operation(summary = "operation.card.balance.summary")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "operation.card.balance.success",
@@ -47,8 +47,8 @@ public class CartaoController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<BigDecimal> obterSaldo(@PathVariable String numeroCartao) {
-        return cartaoService.obterSaldo(numeroCartao);
+    public ResponseEntity<BigDecimal> getBalanceByCardNumber(@PathVariable String cardNumber) {
+        return cardService.getBalanceByCardNumber(cardNumber);
     }
 
 }

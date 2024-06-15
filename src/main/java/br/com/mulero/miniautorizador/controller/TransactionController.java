@@ -1,6 +1,7 @@
 package br.com.mulero.miniautorizador.controller;
 
-import br.com.mulero.miniautorizador.dto.TransacaoDTO;
+import br.com.mulero.miniautorizador.dto.TransactionDTO;
+import br.com.mulero.miniautorizador.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/transacoes")
 @Tag(name = "operation.transaction", description = "operation.transaction.description")
 @RequiredArgsConstructor
-public class TransacaoController {
+public class TransactionController {
+
+    private final TransactionService transactionService;
 
     @PostMapping
     @Operation(summary = "operation.transaction.create.summary")
@@ -31,7 +34,7 @@ public class TransacaoController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public void realizarTransacao(@Valid @RequestBody TransacaoDTO transacaoDTO) {
-        throw new UnsupportedOperationException("Operação não suportada");
+    public void autorizar(@Valid @RequestBody TransactionDTO transactionDTO) {
+        transactionService.authorize(transactionDTO);
     }
 }
