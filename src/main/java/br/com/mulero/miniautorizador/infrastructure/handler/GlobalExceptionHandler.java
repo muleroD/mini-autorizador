@@ -42,11 +42,6 @@ public class GlobalExceptionHandler {
         return buildProblemDetail(HttpStatus.BAD_REQUEST, messages, ex);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleException(Exception ex) {
-        return buildProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, resourceBundle.getString("error.internal.server"), ex);
-    }
-
     private ResponseEntity<ProblemDetail> buildProblemDetail(HttpStatus status, String message, Exception ex) {
         log.error(ex.getMessage(), ex);
 
