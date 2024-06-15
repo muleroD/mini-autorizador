@@ -37,4 +37,8 @@ public class Cartao {
     public void setSenha(@NotNull String senha) {
         this.senha = new BCryptPasswordEncoder().encode(senha);
     }
+
+    public Example<Cartao> toExample() {
+        return Example.of(this);
+    }
 }
