@@ -5,9 +5,10 @@ mini autorizador para processar transações de Vale Refeição e Vale Alimenta�
 
 ## Tecnologias Utilizadas
 
-- Java
-- Spring Boot
-- Maven
+- Java 17
+- Spring Boot 3.3.0
+- Maven 3.3.2
+- MySQL 5.7
 
 ## Funcionalidades
 
