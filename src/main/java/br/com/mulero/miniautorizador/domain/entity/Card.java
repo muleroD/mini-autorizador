@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cartao {
+public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +26,19 @@ public class Cartao {
     @NotNull
     @Size(min = 16, max = 16)
     @Column(unique = true)
-    private String numero;
+    private String number;
 
     @NotNull
-    private String senha;
+    private String password;
 
     @NotNull
-    private BigDecimal saldo;
+    private BigDecimal balance;
 
-    public void setSenha(@NotNull String senha) {
-        this.senha = new BCryptPasswordEncoder().encode(senha);
+    public void setPassword(@NotNull String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 
-    public Example<Cartao> toExample() {
+    public Example<Card> toExample() {
         return Example.of(this);
     }
 }
