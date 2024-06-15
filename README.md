@@ -86,7 +86,7 @@ Este projeto inclui testes automatizados para garantir a qualidade e o correto f
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/mini-autorizador.git
+   git clone https://github.com/muleroD/mini-autorizador.git
    ```
 2. Navegue até o diretório do projeto:
    ```bash
