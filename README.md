@@ -103,4 +103,4 @@ Este projeto inclui testes automatizados para garantir a qualidade e o correto f
 ## Documentação de API
 
 A documentação detalhada da API com exemplos de requisições e respostas está
-disponível [aqui](docs/api-documentation.md).
+disponível [aqui](http://localhost:8080/swagger-ui/index.html).
