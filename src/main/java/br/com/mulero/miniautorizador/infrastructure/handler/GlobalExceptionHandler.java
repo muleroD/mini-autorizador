@@ -2,6 +2,7 @@ package br.com.mulero.miniautorizador.infrastructure.handler;
 
 import br.com.mulero.miniautorizador.infrastructure.config.I18nConfig;
 import br.com.mulero.miniautorizador.infrastructure.exception.CardAlreadyExistsException;
+import jakarta.transaction.TransactionalException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CardAlreadyExistsException.class)
     public ResponseEntity<Object> handleCardAlreadyExistsException(CardAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getCardDTO());
+    }
+
+    @ExceptionHandler(TransactionalException.class)
+    public ResponseEntity<ProblemDetail> handleTransactionalException(TransactionalException ex) {
+        return buildProblemDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), ex);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
