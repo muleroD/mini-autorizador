@@ -2,6 +2,7 @@ package br.com.mulero.miniautorizador.infrastructure.handler;
 
 import br.com.mulero.miniautorizador.infrastructure.config.I18nConfig;
 import br.com.mulero.miniautorizador.infrastructure.exception.CardAlreadyExistsException;
+import br.com.mulero.miniautorizador.infrastructure.exception.TransactionException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -27,6 +28,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getCardDTO());
     }
 
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<ProblemDetail> handleTransactionalException(TransactionException ex) {
+        String message = resourceBundle.getString(ex.getMessage());
+        return buildProblemDetail(HttpStatus.UNPROCESSABLE_ENTITY, message, ex);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ProblemDetail> handleConstraintViolationException(ConstraintViolationException ex) {
         return buildProblemDetail(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
@@ -42,13 +49,8 @@ public class GlobalExceptionHandler {
         return buildProblemDetail(HttpStatus.BAD_REQUEST, messages, ex);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleException(Exception ex) {
-        return buildProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, resourceBundle.getString("error.internal.server"), ex);
-    }
-
     private ResponseEntity<ProblemDetail> buildProblemDetail(HttpStatus status, String message, Exception ex) {
-        log.error(ex.getMessage(), ex);
+        log.error(message, ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, message);
         return new ResponseEntity<>(problemDetail, status);
