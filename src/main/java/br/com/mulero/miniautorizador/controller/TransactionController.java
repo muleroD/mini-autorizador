@@ -37,7 +37,7 @@ public class TransactionController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/deposit/{cardNumber}")
+    @PostMapping("/deposit")
     @Operation(summary = "operation.transaction.deposit.summary")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "operation.transaction.create.success",
@@ -47,8 +47,8 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO, @PathVariable String cardNumber) {
-        transactionService.deposit(transactionDTO, cardNumber);
+    public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO) {
+        transactionService.deposit(transactionDTO);
         return ResponseEntity.ok().build();
     }
 

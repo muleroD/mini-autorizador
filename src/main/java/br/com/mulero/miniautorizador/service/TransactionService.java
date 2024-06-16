@@ -22,9 +22,9 @@ public class TransactionService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deposit(TransactionDTO transactionDTO, String cardNumber) {
+    public void deposit(TransactionDTO transactionDTO) {
         this.authorize(transactionDTO, TransactionType.DEPOSIT);
-        cardService.deposit(transactionDTO, cardNumber);
+        cardService.deposit(transactionDTO);
     }
 
     @Transactional(rollbackFor = Exception.class)
