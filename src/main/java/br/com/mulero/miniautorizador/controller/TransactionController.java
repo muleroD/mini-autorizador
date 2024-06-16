@@ -33,7 +33,8 @@ public class TransactionController {
                     content = @Content(schema = @Schema()))
     })
     public ResponseEntity<Object> withdraw(@Valid @RequestBody TransactionDTO transactionDTO) {
-        return transactionService.withdraw(transactionDTO);
+        transactionService.withdraw(transactionDTO);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/deposit/{cardNumber}")
@@ -47,7 +48,8 @@ public class TransactionController {
                     content = @Content(schema = @Schema()))
     })
     public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO, @PathVariable String cardNumber) {
-        return transactionService.deposit(transactionDTO);
+        transactionService.deposit(transactionDTO, cardNumber);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/transfer/{cardNumber}")
@@ -61,6 +63,7 @@ public class TransactionController {
                     content = @Content(schema = @Schema()))
     })
     public ResponseEntity<Object> transfer(@Valid @RequestBody TransactionDTO transactionDTO, @PathVariable String cardNumber) {
-        return transactionService.transfer(transactionDTO);
+        transactionService.transfer(transactionDTO, cardNumber);
+        return ResponseEntity.ok().build();
     }
 }

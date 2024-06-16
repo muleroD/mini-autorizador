@@ -3,7 +3,9 @@ package br.com.mulero.miniautorizador.service;
 import br.com.mulero.miniautorizador.domain.entity.Card;
 import br.com.mulero.miniautorizador.domain.repository.CardRepository;
 import br.com.mulero.miniautorizador.dto.CardDTO;
+import br.com.mulero.miniautorizador.dto.TransactionDTO;
 import br.com.mulero.miniautorizador.infrastructure.exception.CardAlreadyExistsException;
+import br.com.mulero.miniautorizador.infrastructure.exception.CardNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,9 +39,27 @@ public class CardService {
     }
 
     public ResponseEntity<BigDecimal> getBalanceByCardNumber(String cardNumber) {
-        return cardRepository.findOne(Card.builder().number(cardNumber).build().toExample())
+        Card cardExample = Card.builder().number(cardNumber).build();
+
+        return cardRepository.findOne(cardExample.toExample())
                 .map(Card::getBalance)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void withdraw(TransactionDTO transactionDTO) {
+        Card card = cardRepository.findOneByCardNumber(transactionDTO.getCardNumber());
+
+        card.setBalance(card.getBalance().subtract(transactionDTO.getAmount()));
+        cardRepository.save(card);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deposit(TransactionDTO transactionDTO, String cardNumber) {
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void transfer(TransactionDTO transactionDTO, String cardNumber) {
     }
 }
