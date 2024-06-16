@@ -23,7 +23,7 @@ public class Transaction {
     @ManyToOne
     private Card card;
 
-    private LocalDateTime date;
+    private LocalDateTime date = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
