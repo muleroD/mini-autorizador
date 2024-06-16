@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public void autorizar(@Valid @RequestBody TransactionDTO transactionDTO) {
-        transactionService.authorize(transactionDTO);
+    public ResponseEntity<Object> autorizar(@Valid @RequestBody TransactionDTO transactionDTO) throws Exception {
+        return transactionService.authorize(transactionDTO);
     }
 }
