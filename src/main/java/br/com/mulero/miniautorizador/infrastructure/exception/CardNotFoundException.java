@@ -1,7 +1,8 @@
 package br.com.mulero.miniautorizador.infrastructure.exception;
 
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
 public class CardNotFoundException extends TransactionException {
+
+    public CardNotFoundException() {
+        super("error.card.not.found");
+    }
 }
