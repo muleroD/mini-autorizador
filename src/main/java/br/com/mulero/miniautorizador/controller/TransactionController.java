@@ -3,6 +3,7 @@ package br.com.mulero.miniautorizador.controller;
 import br.com.mulero.miniautorizador.dto.TransactionDTO;
 import br.com.mulero.miniautorizador.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -62,7 +63,9 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<Object> transfer(@Valid @RequestBody TransactionDTO transactionDTO, @PathVariable String cardNumber) {
+    public ResponseEntity<Object> transfer(
+            @Valid @RequestBody TransactionDTO transactionDTO,
+            @Parameter(description = "operation.transaction.transfer.cardNumber") @PathVariable String cardNumber) {
         transactionService.transfer(transactionDTO, cardNumber);
         return ResponseEntity.ok().build();
     }
