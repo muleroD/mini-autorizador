@@ -13,4 +13,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     @Query("select true from Card c where c.number = :cardNumber")
     Optional<Boolean> findFirstByNumber(String cardNumber);
 
+    @Query("select c.password from Card c where c.number = :cardNumber")
+    Optional<String> findPasswordByNumber(String cardNumber);
+
 }
