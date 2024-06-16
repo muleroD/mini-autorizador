@@ -11,3 +11,8 @@ spring:
 
 springdoc:
   show-actuator: true
+
+security:
+  basic:
+    username: username
+    password: password
