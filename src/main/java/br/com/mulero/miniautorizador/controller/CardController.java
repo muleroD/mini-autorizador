@@ -11,9 +11,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+
+import static br.com.mulero.miniautorizador.infrastructure.security.Role.USER;
 
 @RestController
 @RequestMapping("/cartoes")
@@ -33,6 +36,7 @@ public class CardController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
+    @Secured(USER)
     public ResponseEntity<CardDTO> create(@Valid @RequestBody CardDTO cardDTO) {
         return cardService.create(cardDTO);
     }
@@ -47,6 +51,7 @@ public class CardController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
+    @Secured(USER)
     public ResponseEntity<BigDecimal> getBalanceByCardNumber(@PathVariable String cardNumber) {
         return cardService.getBalanceByCardNumber(cardNumber);
     }

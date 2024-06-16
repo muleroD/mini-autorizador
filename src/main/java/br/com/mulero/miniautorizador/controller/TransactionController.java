@@ -13,7 +13,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import static br.com.mulero.miniautorizador.infrastructure.security.Role.USER;
 
 @RestController
 @RequestMapping("/transacoes")
@@ -33,6 +36,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
+    @Secured(USER)
     public ResponseEntity<Object> withdraw(@Valid @RequestBody TransactionDTO transactionDTO) {
         transactionService.withdraw(transactionDTO);
         return ResponseEntity.ok().build();
@@ -48,6 +52,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
+    @Secured(USER)
     public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO) {
         transactionService.deposit(transactionDTO);
         return ResponseEntity.ok().build();
@@ -63,6 +68,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
+    @Secured(USER)
     public ResponseEntity<Object> transfer(
             @Valid @RequestBody TransactionDTO transactionDTO,
             @Parameter(description = "operation.transaction.transfer.cardNumber") @PathVariable String cardNumber) {
