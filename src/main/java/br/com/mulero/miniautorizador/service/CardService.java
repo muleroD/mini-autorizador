@@ -64,5 +64,13 @@ public class CardService {
 
     @Transactional(rollbackFor = Exception.class)
     public void transfer(TransactionDTO transactionDTO, String cardNumber) {
+        Card cardToReceive = cardRepository.findOneByCardNumber(transactionDTO.getCardNumber());
+        Card cardToTransfer = cardRepository.findOneByCardNumber(cardNumber);
+
+        cardToReceive.setBalance(cardToReceive.getBalance().add(transactionDTO.getAmount()));
+        cardToTransfer.setBalance(cardToTransfer.getBalance().subtract(transactionDTO.getAmount()));
+
+        cardRepository.save(cardToReceive);
+        cardRepository.save(cardToTransfer);
     }
 }
