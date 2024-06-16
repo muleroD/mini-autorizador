@@ -2,6 +2,7 @@ package br.com.mulero.miniautorizador.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -10,12 +11,16 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Configuration
 public class I18nConfig implements WebMvcConfigurer {
 
     public static final String DEFAULT_LANGUAGE = "pt-BR";
     public static final String DEFAULT_DIRECTORY = "i18n.messages";
+
+    public static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(DEFAULT_DIRECTORY,
+            LocaleContextHolder.getLocale());
 
     @Bean
     public LocaleResolver localeResolver() {
