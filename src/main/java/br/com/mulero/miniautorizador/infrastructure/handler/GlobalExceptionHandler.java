@@ -2,15 +2,18 @@ package br.com.mulero.miniautorizador.infrastructure.handler;
 
 import br.com.mulero.miniautorizador.infrastructure.exception.CardAlreadyExistsException;
 import br.com.mulero.miniautorizador.infrastructure.exception.TransactionException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +51,20 @@ public class GlobalExceptionHandler {
         }).toList();
 
         return buildProblemDetail(HttpStatus.BAD_REQUEST, ex, message, errors);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ProblemDetail> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return handleInvalidFormatException((InvalidFormatException) ex.getCause());
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidFormatException(InvalidFormatException ex) {
+        String value = (String) ex.getValue();
+        String target = ex.getTargetType().getSimpleName();
+        String message = MessageFormat.format(RESOURCE_BUNDLE.getString("error.invalid.format"), value, target);
+
+        return buildProblemDetail(HttpStatus.BAD_REQUEST, ex, message);
     }
 
     private ResponseEntity<ProblemDetail> buildProblemDetail(HttpStatus status, Exception ex, String message, List<String> errors) {
