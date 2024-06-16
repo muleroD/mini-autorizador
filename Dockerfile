@@ -15,10 +15,7 @@ RUN mvn dependency:go-offline
 COPY src src
 
 # 6. Build the project
-RUN mvn package -DskipTests
-
-# 7. Create a symbolic link to the latest .jar file
-RUN ln -s $(ls -t target/*.jar | head -n 1) target/latest.jar
+RUN mvn package
 
 ## Deploy Stage
 # 1. Use the temurin image to deploy the application
@@ -28,7 +25,7 @@ FROM eclipse-temurin:17-alpine AS deploy
 WORKDIR /app
 
 # 3. Copy the symbolic link (and the file it points to) from the build stage
-COPY --from=build /app/target/latest.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 # 4. Expose the port
 EXPOSE 8080
