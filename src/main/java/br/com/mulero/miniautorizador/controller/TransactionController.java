@@ -12,10 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transacoes")
@@ -26,7 +23,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
-    @Operation(summary = "operation.transaction.create.summary")
+    @Operation(summary = "operation.transaction.withdraw.summary")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "operation.transaction.create.success",
                     content = @Content(schema = @Schema())),
@@ -35,7 +32,35 @@ public class TransactionController {
             @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<Object> autorizar(@Valid @RequestBody TransactionDTO transactionDTO) throws Exception {
-        return transactionService.authorize(transactionDTO);
+    public ResponseEntity<Object> withdraw(@Valid @RequestBody TransactionDTO transactionDTO) {
+        return transactionService.withdraw(transactionDTO);
+    }
+
+    @PostMapping("/deposit/{cardNumber}")
+    @Operation(summary = "operation.transaction.deposit.summary")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "operation.transaction.create.success",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "422", description = "operation.common.unprocessableEntity",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
+                    content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO, @PathVariable String cardNumber) {
+        return transactionService.deposit(transactionDTO);
+    }
+
+    @PostMapping("/transfer/{cardNumber}")
+    @Operation(summary = "operation.transaction.transfer.summary")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "operation.transaction.create.success",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "422", description = "operation.common.unprocessableEntity",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+            @ApiResponse(responseCode = "401", description = "operation.common.unauthorized",
+                    content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<Object> transfer(@Valid @RequestBody TransactionDTO transactionDTO, @PathVariable String cardNumber) {
+        return transactionService.transfer(transactionDTO);
     }
 }
