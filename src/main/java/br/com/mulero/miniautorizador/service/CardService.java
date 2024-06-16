@@ -5,7 +5,6 @@ import br.com.mulero.miniautorizador.domain.repository.CardRepository;
 import br.com.mulero.miniautorizador.dto.CardDTO;
 import br.com.mulero.miniautorizador.dto.TransactionDTO;
 import br.com.mulero.miniautorizador.infrastructure.exception.CardAlreadyExistsException;
-import br.com.mulero.miniautorizador.infrastructure.exception.CardNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,6 +56,10 @@ public class CardService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deposit(TransactionDTO transactionDTO, String cardNumber) {
+        Card card = cardRepository.findOneByCardNumber(cardNumber);
+
+        card.setBalance(card.getBalance().add(transactionDTO.getAmount()));
+        cardRepository.save(card);
     }
 
     @Transactional(rollbackFor = Exception.class)
