@@ -1,7 +1,7 @@
 package br.com.mulero.miniautorizador.chain.handler.transaction;
 
 import br.com.mulero.miniautorizador.chain.handler.ChainHandler;
-import br.com.mulero.miniautorizador.domain.repository.CardRepository;
+import br.com.mulero.miniautorizador.domain.entity.Card;
 import br.com.mulero.miniautorizador.dto.TransactionDTO;
 import br.com.mulero.miniautorizador.infrastructure.exception.InvalidPasswordException;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,6 @@ public class PasswordCorrectHandler implements ChainHandler {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    private final CardRepository cardRepository;
-
     private ChainHandler nextChain;
 
     @Override
@@ -25,13 +23,14 @@ public class PasswordCorrectHandler implements ChainHandler {
     }
 
     @Override
-    public void process(Object request) {
-        TransactionDTO transactionDTO = (TransactionDTO) request;
+    public <O, P> void process(O originalRequest, P processedRequest) {
+        TransactionDTO transactionDTO = (TransactionDTO) originalRequest;
+        Card card = (Card) processedRequest;
 
-        cardRepository.findPasswordByNumber(transactionDTO.getCardNumber())
-                .filter(password -> bCryptPasswordEncoder.matches(transactionDTO.getPassword(), password))
-                .ifPresentOrElse(password -> nextChain.process(request), () -> {
-                    throw new InvalidPasswordException();
-                });
+        if (!bCryptPasswordEncoder.matches(transactionDTO.getPassword(), card.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        nextChain.process(originalRequest, processedRequest);
     }
 }

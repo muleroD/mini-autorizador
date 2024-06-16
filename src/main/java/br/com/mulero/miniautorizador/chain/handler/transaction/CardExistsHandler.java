@@ -1,6 +1,7 @@
 package br.com.mulero.miniautorizador.chain.handler.transaction;
 
 import br.com.mulero.miniautorizador.chain.handler.ChainHandler;
+import br.com.mulero.miniautorizador.domain.entity.Card;
 import br.com.mulero.miniautorizador.domain.repository.CardRepository;
 import br.com.mulero.miniautorizador.dto.TransactionDTO;
 import br.com.mulero.miniautorizador.infrastructure.exception.CardNotFoundException;
@@ -22,11 +23,12 @@ public class CardExistsHandler implements ChainHandler {
     }
 
     @Override
-    public void process(Object request) {
-        TransactionDTO transactionDTO = (TransactionDTO) request;
+    public <O, P> void process(O originalRequest, P processedRequest) {
+        TransactionDTO transactionDTO = (TransactionDTO) originalRequest;
+        Card cardExample = Card.builder().number(transactionDTO.getCardNumber()).build();
 
-        cardRepository.findFirstByNumber(transactionDTO.getCardNumber())
-                .ifPresentOrElse(exists -> nextChain.process(request), () -> {
+        cardRepository.findOne(cardExample.toExample())
+                .ifPresentOrElse(card -> nextChain.process(originalRequest, card), () -> {
                     throw new CardNotFoundException();
                 });
     }
