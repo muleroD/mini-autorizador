@@ -1,10 +1,17 @@
 package br.com.mulero.miniautorizador.chain.handler.transaction;
 
 import br.com.mulero.miniautorizador.chain.handler.ChainHandler;
+import br.com.mulero.miniautorizador.domain.repository.CardRepository;
+import br.com.mulero.miniautorizador.dto.TransactionDTO;
+import br.com.mulero.miniautorizador.infrastructure.exception.CardNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class CardExistsHandler implements ChainHandler {
+
+    private final CardRepository cardRepository;
 
     private ChainHandler nextChain;
 
@@ -16,7 +23,11 @@ public class CardExistsHandler implements ChainHandler {
 
     @Override
     public void process(Object request) {
-        // TODO: Implement the process
-        nextChain.process(request);
+        TransactionDTO transactionDTO = (TransactionDTO) request;
+
+        cardRepository.findFirstByNumber(transactionDTO.getCardNumber())
+                .ifPresentOrElse(exists -> nextChain.process(request), () -> {
+                    throw new CardNotFoundException();
+                });
     }
 }
