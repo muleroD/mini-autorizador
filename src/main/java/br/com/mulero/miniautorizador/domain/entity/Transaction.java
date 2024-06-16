@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -27,4 +28,12 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
+
+    private BigDecimal amount;
+
+    public Transaction(Card card, TransactionType type, BigDecimal amount) {
+        this.card = card;
+        this.type = type;
+        this.amount = amount;
+    }
 }

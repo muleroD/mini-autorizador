@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -47,23 +48,25 @@ public class CardService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void withdraw(TransactionDTO transactionDTO) {
+    public Card withdraw(TransactionDTO transactionDTO) {
         Card card = cardRepository.findOneByCardNumber(transactionDTO.getCardNumber());
 
         card.setBalance(card.getBalance().subtract(transactionDTO.getAmount()));
         cardRepository.save(card);
+        return card;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deposit(TransactionDTO transactionDTO) {
+    public Card deposit(TransactionDTO transactionDTO) {
         Card card = cardRepository.findOneByCardNumber(transactionDTO.getCardNumber());
 
         card.setBalance(card.getBalance().add(transactionDTO.getAmount()));
         cardRepository.save(card);
+        return card;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void transfer(TransactionDTO transactionDTO, String cardNumber) {
+    public List<Card> transfer(TransactionDTO transactionDTO, String cardNumber) {
         Card cardToTransfer = cardRepository.findOneByCardNumber(transactionDTO.getCardNumber());
         cardToTransfer.setBalance(cardToTransfer.getBalance().subtract(transactionDTO.getAmount()));
         cardRepository.save(cardToTransfer);
@@ -71,5 +74,7 @@ public class CardService {
         Card cardToReceive = cardRepository.findOneByCardNumber(cardNumber);
         cardToReceive.setBalance(cardToReceive.getBalance().add(transactionDTO.getAmount()));
         cardRepository.save(cardToReceive);
+
+        return List.of(cardToTransfer, cardToReceive);
     }
 }
