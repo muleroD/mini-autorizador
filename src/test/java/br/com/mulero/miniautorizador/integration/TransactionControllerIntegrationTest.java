@@ -115,4 +115,37 @@ class TransactionControllerIntegrationTest extends BaseIntegrationTest {
         BigDecimal newBalance = new BigDecimal(resultBalance.getResponse().getContentAsString());
         assertEquals(DEFAULT_BALANCE.add(BigDecimal.valueOf(100)), newBalance);
     }
+
+    @Test
+    void transfer() throws Exception {
+        MvcResult resultBalance;
+
+        CardDTO cardToTransfer = createRandomCardDto();
+        performPost(URL_CARDS, cardToTransfer);
+
+        CardDTO cardToReceive = createRandomCardDto();
+        performPost(URL_CARDS, cardToReceive);
+
+        String cardNumberToTransfer = cardToTransfer.getCardNumber();
+        resultBalance = performGet(URL_CARDS + "/" + cardNumberToTransfer);
+        BigDecimal currentBalance = new BigDecimal(resultBalance.getResponse().getContentAsString());
+        assertEquals(DEFAULT_BALANCE, currentBalance);
+
+        TransactionDTO body = getTransactionDTO(cardToTransfer, BigDecimal.valueOf(100));
+
+        MvcResult result = performPost(URL_TRANSACTION_TRANSFER + "/" + cardToReceive.getCardNumber(), body);
+        assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+
+        String transactionResult = result.getResponse().getContentAsString();
+
+        assertEquals(OPERATION_TRANSACTION_SUCCESS, transactionResult);
+
+        resultBalance = performGet(URL_CARDS + "/" + cardNumberToTransfer);
+        BigDecimal newBalance = new BigDecimal(resultBalance.getResponse().getContentAsString());
+        assertEquals(DEFAULT_BALANCE.subtract(BigDecimal.valueOf(100)), newBalance);
+
+        resultBalance = performGet(URL_CARDS + "/" + cardToReceive.getCardNumber());
+        BigDecimal newBalance2 = new BigDecimal(resultBalance.getResponse().getContentAsString());
+        assertEquals(DEFAULT_BALANCE.add(BigDecimal.valueOf(100)), newBalance2);
+    }
 }

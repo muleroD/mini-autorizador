@@ -3,6 +3,7 @@ package br.com.mulero.miniautorizador.util;
 import br.com.mulero.miniautorizador.dto.CardDTO;
 import br.com.mulero.miniautorizador.dto.TransactionDTO;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 public class TestUtil {
@@ -25,11 +26,15 @@ public class TestUtil {
         return getCardDTO(generateRandomCardNumber(), generateRandomPassword());
     }
 
-    private static CardDTO getCardDTO(String cardNumber, String password) {
+    public static CardDTO getCardDTO(String cardNumber, String password) {
         CardDTO cardDTO = new CardDTO();
         cardDTO.setCardNumber(cardNumber);
         cardDTO.setPassword(password);
         return cardDTO;
+    }
+
+    public static TransactionDTO getTransactionDTO(CardDTO cardDTO, BigDecimal amount) {
+        return new TransactionDTO(cardDTO, amount);
     }
 
     public static String generateRandomCardNumber() {
