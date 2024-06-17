@@ -34,6 +34,12 @@ public class Card {
     @NotNull
     private BigDecimal balance;
 
+    public Card(String number, String password, BigDecimal balance) {
+        this.number = number;
+        this.balance = balance;
+        setPassword(password);
+    }
+
     public void setPassword(@NotNull String password) {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
