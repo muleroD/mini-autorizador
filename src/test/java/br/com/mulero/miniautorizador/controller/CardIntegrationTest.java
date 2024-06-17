@@ -19,11 +19,13 @@ class CardIntegrationTest extends BaseIntegrationTest {
 
     private final BigDecimal balance = new BigDecimal("500.00");
 
+    public static final String URL_CARDS = "/cartoes";
+
     @Test
     void create() throws Exception {
         CardDTO cardBody = createDefaultCardDto();
 
-        MvcResult result = performPost("/cartoes", cardBody);
+        MvcResult result = performPost(URL_CARDS, cardBody);
 
         assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
 
@@ -34,4 +36,26 @@ class CardIntegrationTest extends BaseIntegrationTest {
         assertEquals(cardBody.getCardNumber(), cardResult.getCardNumber());
         assertEquals(cardBody.getPassword(), cardResult.getPassword());
     }
+
+    @Test
+    void createWithExistingCard() throws Exception {
+        CardDTO cardBody = createDefaultCardDto();
+
+        MvcResult result = performPost(URL_CARDS, cardBody);
+
+        assertNotNull(result.getResponse().getContentAsString());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), result.getResponse().getStatus());
+    }
+
+    @Test
+    void createWithAuthenticationError() throws Exception {
+        CardDTO cardBody = createDefaultCardDto();
+
+        MvcResult result = performInvalidPost(URL_CARDS, cardBody);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
+    }
+
+
 }
