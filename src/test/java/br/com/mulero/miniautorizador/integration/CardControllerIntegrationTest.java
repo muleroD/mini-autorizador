@@ -95,7 +95,7 @@ class CardControllerIntegrationTest extends BaseIntegrationTest {
     void getBalanceByCardNumberWithNonExistingCard() throws Exception {
         createRandomCard();
 
-        String cardNumber = generateCardNumber();
+        String cardNumber = generateRandomCardNumber();
 
         MvcResult result = performGet(URL_CARDS + "/" + cardNumber);
 
@@ -105,7 +105,7 @@ class CardControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getBalanceByCardNumberWithAuthenticationError() throws Exception {
-        String cardNumber = generateCardNumber();
+        String cardNumber = generateRandomCardNumber();
 
         MvcResult result = performInvalidGet(URL_CARDS + "/" + cardNumber);
 

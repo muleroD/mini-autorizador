@@ -22,7 +22,7 @@ public class TestUtil {
     }
 
     public static CardDTO createRandomCardDto() {
-        return getCardDTO(generateCardNumber(), generatePassword());
+        return getCardDTO(generateRandomCardNumber(), generateRandomPassword());
     }
 
     private static CardDTO getCardDTO(String cardNumber, String password) {
@@ -32,14 +32,14 @@ public class TestUtil {
         return cardDTO;
     }
 
-    public static String generateCardNumber() {
+    public static String generateRandomCardNumber() {
         StringBuilder cardNumber = new StringBuilder();
         RANDOM.ints(16, 0, 10)
                 .forEach(cardNumber::append);
         return cardNumber.toString();
     }
 
-    public static String generatePassword() {
+    public static String generateRandomPassword() {
         StringBuilder password = new StringBuilder();
         RANDOM.ints(4, 0, 10)
                 .forEach(password::append);
