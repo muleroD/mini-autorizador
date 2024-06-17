@@ -21,4 +21,12 @@ public class TransactionDTO extends CardDTO {
     @JsonProperty("valor")
     private BigDecimal amount;
 
+    public TransactionDTO(CardDTO cardDTO) {
+        super(cardDTO.getCardNumber(), cardDTO.getPassword());
+    }
+
+    public TransactionDTO(CardDTO cardDTO, BigDecimal amount) {
+        super(cardDTO.getCardNumber(), cardDTO.getPassword());
+        this.amount = amount;
+    }
 }

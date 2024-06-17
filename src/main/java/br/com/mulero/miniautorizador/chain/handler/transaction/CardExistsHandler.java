@@ -26,6 +26,9 @@ public class CardExistsHandler implements ChainHandler {
         TransactionDTO transactionDTO = (TransactionDTO) originalRequest;
 
         Card card = cardRepository.findOneByCardNumber(transactionDTO.getCardNumber());
-        nextChain.process(originalRequest, card);
+
+        if (nextChain != null) {
+            nextChain.process(originalRequest, card);
+        }
     }
 }

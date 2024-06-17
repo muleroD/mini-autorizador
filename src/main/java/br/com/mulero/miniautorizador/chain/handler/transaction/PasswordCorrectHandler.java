@@ -31,6 +31,8 @@ public class PasswordCorrectHandler implements ChainHandler {
             throw new InvalidPasswordException();
         }
 
-        nextChain.process(originalRequest, processedRequest);
+        if (nextChain != null) {
+            nextChain.process(originalRequest, processedRequest);
+        }
     }
 }
