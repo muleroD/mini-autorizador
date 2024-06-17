@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.math.BigDecimal;
 
 import static br.com.mulero.miniautorizador.util.CardUtil.createDefaultCardDto;
+import static br.com.mulero.miniautorizador.util.CardUtil.generateCardNumber;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -57,5 +58,37 @@ class CardIntegrationTest extends BaseIntegrationTest {
         assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
     }
 
+    @Test
+    void getBalanceByCardNumber() throws Exception {
+        String cardNumber = createDefaultCardDto().getCardNumber();
+
+        MvcResult result = performGet(URL_CARDS + "/" + cardNumber);
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+
+        BigDecimal currentBalance = new BigDecimal(result.getResponse().getContentAsString());
+        assertNotNull(currentBalance);
+
+        assertEquals(currentBalance, balance);
+    }
+
+    @Test
+    void getBalanceByCardNumberWithNonExistingCard() throws Exception {
+        String cardNumber = generateCardNumber();
+
+        MvcResult result = performGet(URL_CARDS + "/" + cardNumber);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
+    }
+
+    @Test
+    void getBalanceByCardNumberWithAuthenticationError() throws Exception {
+        String cardNumber = generateCardNumber();
+
+        MvcResult result = performInvalidGet(URL_CARDS + "/" + cardNumber);
+
+        assertNotNull(result);
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
+    }
 
 }
