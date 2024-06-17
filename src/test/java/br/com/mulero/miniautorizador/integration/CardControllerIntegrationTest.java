@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 class CardControllerIntegrationTest extends BaseIntegrationTest {
 
-    private final BigDecimal balance = new BigDecimal("500.00");
-
     @Test
     void createDefaultCard() throws Exception {
         CardDTO cardBody = createDefaultCardDto();
@@ -88,7 +86,7 @@ class CardControllerIntegrationTest extends BaseIntegrationTest {
         BigDecimal currentBalance = new BigDecimal(result.getResponse().getContentAsString());
         assertNotNull(currentBalance);
 
-        assertEquals(currentBalance, balance);
+        assertEquals(DEFAULT_BALANCE, currentBalance);
     }
 
     @Test

@@ -4,13 +4,20 @@ import br.com.mulero.miniautorizador.rest.MockMvcClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+import java.math.BigDecimal;
+
+@Transactional
 public abstract class BaseIntegrationTest extends MockMvcClient {
 
-    public static final String URL_TRANSACTION = "/transacoes";
     public static final String URL_CARDS = "/cartoes";
+    public static final String URL_TRANSACTION = "/transacoes";
+    public static final String URL_TRANSACTION_DEPOSIT = "/transacoes/deposito";
+    public static final String URL_TRANSACTION_TRANSFER = "/transacoes/transferencia";
+
+    public static final BigDecimal DEFAULT_BALANCE = new BigDecimal("500");
 
     private AutoCloseable closeable;
 
@@ -20,6 +27,7 @@ public abstract class BaseIntegrationTest extends MockMvcClient {
     }
 
     @AfterEach
+    @Rollback
     public void closeService() throws Exception {
         closeable.close();
     }
