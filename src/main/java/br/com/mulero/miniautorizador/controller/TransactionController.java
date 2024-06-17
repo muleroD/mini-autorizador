@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class TransactionController {
 
-    public static final String OPERATION_TRANSACTION_SUCCESS = "operation.transaction.success";
+    public static final String OPERATION_TRANSACTION_SUCCESS = RESOURCE_BUNDLE.getString("operation.transaction.success");
 
     private final TransactionService transactionService;
 
@@ -40,7 +40,7 @@ public class TransactionController {
     })
     public ResponseEntity<Object> withdraw(@Valid @RequestBody TransactionDTO transactionDTO) {
         transactionService.withdraw(transactionDTO);
-        return ResponseEntity.status(CREATED).body(RESOURCE_BUNDLE.getString(OPERATION_TRANSACTION_SUCCESS));
+        return ResponseEntity.status(CREATED).body(OPERATION_TRANSACTION_SUCCESS);
     }
 
     @PostMapping("/deposit")
@@ -55,7 +55,7 @@ public class TransactionController {
     })
     public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO) {
         transactionService.deposit(transactionDTO);
-        return ResponseEntity.status(CREATED).body(RESOURCE_BUNDLE.getString(OPERATION_TRANSACTION_SUCCESS));
+        return ResponseEntity.status(CREATED).body(OPERATION_TRANSACTION_SUCCESS);
     }
 
     @PostMapping("/transfer/{cardNumber}")
@@ -72,6 +72,6 @@ public class TransactionController {
             @Valid @RequestBody TransactionDTO transactionDTO,
             @Parameter(description = "operation.transaction.transfer.cardNumber") @PathVariable String cardNumber) {
         transactionService.transfer(transactionDTO, cardNumber);
-        return ResponseEntity.status(CREATED).body(RESOURCE_BUNDLE.getString(OPERATION_TRANSACTION_SUCCESS));
+        return ResponseEntity.status(CREATED).body(OPERATION_TRANSACTION_SUCCESS);
     }
 }
