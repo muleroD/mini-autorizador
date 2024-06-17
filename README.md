@@ -319,3 +319,22 @@ fundamentais para verificar se a API se comporta conforme esperado em um ambient
 Ambas as camadas de teste foram implementadas utilizando o framework de testes do Maven. Para executar todos os testes
 automatizados, basta utilizar o comando `mvn test` no terminal. Isso garantirá que todas as funcionalidades do projeto
 sejam testadas de forma abrangente, contribuindo para a robustez e confiabilidade do sistema desenvolvido.
+
+### ACID Transactions
+
+As transações no projeto Mini Autorizador são tratadas de forma atômica, consistente, isolada e durável (ACID). Isso
+significa que as operações de autorização de transações são executadas de forma segura e confiável, garantindo a
+integridade dos dados e a consistência do sistema.
+
+A anotação `@Transactional` garante que o banco de dados trate as operações atomicamente. Isso significa que todas as
+operações em um bloco transacional são executadas com sucesso ou revertidas em caso de falha, evitando estados
+inconsistentes no banco de dados.
+
+Dentro do projeto, foi criado um shell script chamado `request.sh` que contém as requisições para testar as
+funcionalidades do projeto. Para executar o script, basta rodar o comando `sh request.sh` no terminal. Dessa forma, é
+possível testar a concorrência das transações.
+
+É importante observar que no script estão configuradas duas portas
+diferentes para cada requisição: a porta `8080` para a primeira requisição e a porta `8081` para a segunda requisição.
+Isso simula diferentes contextos de execução e permite verificar o comportamento das transações em condições
+concorrentes.
