@@ -1,12 +1,21 @@
 package br.com.mulero.miniautorizador.util;
 
 import br.com.mulero.miniautorizador.dto.CardDTO;
+import br.com.mulero.miniautorizador.dto.TransactionDTO;
 
 import java.util.Random;
 
-public class CardUtil {
+public class TestUtil {
 
     private static final Random RANDOM = new Random();
+
+    public static TransactionDTO createDefaultTransactionDto() {
+        return new TransactionDTO(createDefaultCardDto());
+    }
+
+    public static TransactionDTO createRandomTransactionDto() {
+        return new TransactionDTO(createRandomCardDto());
+    }
 
     public static CardDTO createDefaultCardDto() {
         return getCardDTO("1234567890123456", "1234");

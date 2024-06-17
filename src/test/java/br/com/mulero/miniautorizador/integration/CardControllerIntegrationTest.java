@@ -1,4 +1,4 @@
-package br.com.mulero.miniautorizador.controller;
+package br.com.mulero.miniautorizador.integration;
 
 import br.com.mulero.miniautorizador.dto.CardDTO;
 import org.junit.jupiter.api.Test;
@@ -9,21 +9,18 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 
-import static br.com.mulero.miniautorizador.util.CardUtil.createDefaultCardDto;
-import static br.com.mulero.miniautorizador.util.CardUtil.generateCardNumber;
+import static br.com.mulero.miniautorizador.util.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CardIntegrationTest extends BaseIntegrationTest {
+class CardControllerIntegrationTest extends BaseIntegrationTest {
 
     private final BigDecimal balance = new BigDecimal("500.00");
 
-    public static final String URL_CARDS = "/cartoes";
-
     @Test
-    void create() throws Exception {
+    void createDefaultCard() throws Exception {
         CardDTO cardBody = createDefaultCardDto();
 
         MvcResult result = performPost(URL_CARDS, cardBody);
@@ -39,27 +36,50 @@ class CardIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void createWithExistingCard() throws Exception {
-        CardDTO cardBody = createDefaultCardDto();
+    void createRandomCard() throws Exception {
+        CardDTO cardBody = createRandomCardDto();
 
         MvcResult result = performPost(URL_CARDS, cardBody);
 
-        assertNotNull(result.getResponse().getContentAsString());
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), result.getResponse().getStatus());
+        assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+
+        CardDTO cardResult = objectMapper.readValue(result.getResponse().getContentAsString(), CardDTO.class);
+
+        assertNotNull(cardResult);
+
+        assertEquals(cardBody.getCardNumber(), cardResult.getCardNumber());
+        assertEquals(cardBody.getPassword(), cardResult.getPassword());
     }
 
     @Test
-    void createWithAuthenticationError() throws Exception {
+    void createCardWithExistingCard() throws Exception {
+        CardDTO cardBody = createDefaultCardDto();
+
+        performPost(URL_CARDS, cardBody);
+        MvcResult invalidResult = performPost(URL_CARDS, cardBody);
+        assertNotNull(invalidResult.getResponse().getContentAsString());
+
+        CardDTO cardResult = objectMapper.readValue(invalidResult.getResponse().getContentAsString(), CardDTO.class);
+
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), invalidResult.getResponse().getStatus());
+        assertEquals(cardBody.getCardNumber(), cardResult.getCardNumber());
+        assertEquals(cardBody.getPassword(), cardResult.getPassword());
+    }
+
+    @Test
+    void createCardWithAuthenticationError() throws Exception {
         CardDTO cardBody = createDefaultCardDto();
 
         MvcResult result = performInvalidPost(URL_CARDS, cardBody);
 
-        assertNotNull(result);
+        assertEquals(0, result.getResponse().getContentLength());
         assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
     }
 
     @Test
     void getBalanceByCardNumber() throws Exception {
+        createDefaultCard();
+
         String cardNumber = createDefaultCardDto().getCardNumber();
 
         MvcResult result = performGet(URL_CARDS + "/" + cardNumber);
@@ -73,11 +93,13 @@ class CardIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getBalanceByCardNumberWithNonExistingCard() throws Exception {
+        createRandomCard();
+
         String cardNumber = generateCardNumber();
 
         MvcResult result = performGet(URL_CARDS + "/" + cardNumber);
 
-        assertNotNull(result);
+        assertEquals(0, result.getResponse().getContentLength());
         assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
     }
 
