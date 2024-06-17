@@ -32,8 +32,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TransactionException.class)
-    public ResponseEntity<ProblemDetail> handleTransactionalException(TransactionException ex) {
-        return buildProblemDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex, ex.getMessage());
+    public ResponseEntity<Object> handleTransactionalException(TransactionException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

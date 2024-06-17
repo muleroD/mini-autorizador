@@ -15,11 +15,16 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static br.com.mulero.miniautorizador.infrastructure.config.I18nConfig.RESOURCE_BUNDLE;
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("/transacoes")
 @Tag(name = "operation.transaction", description = "operation.transaction.description")
 @RequiredArgsConstructor
 public class TransactionController {
+
+    public static final String OPERATION_TRANSACTION_SUCCESS = "operation.transaction.success";
 
     private final TransactionService transactionService;
 
@@ -35,7 +40,7 @@ public class TransactionController {
     })
     public ResponseEntity<Object> withdraw(@Valid @RequestBody TransactionDTO transactionDTO) {
         transactionService.withdraw(transactionDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(CREATED).body(RESOURCE_BUNDLE.getString(OPERATION_TRANSACTION_SUCCESS));
     }
 
     @PostMapping("/deposit")
@@ -50,7 +55,7 @@ public class TransactionController {
     })
     public ResponseEntity<Object> deposit(@Valid @RequestBody TransactionDTO transactionDTO) {
         transactionService.deposit(transactionDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(CREATED).body(RESOURCE_BUNDLE.getString(OPERATION_TRANSACTION_SUCCESS));
     }
 
     @PostMapping("/transfer/{cardNumber}")
@@ -67,6 +72,6 @@ public class TransactionController {
             @Valid @RequestBody TransactionDTO transactionDTO,
             @Parameter(description = "operation.transaction.transfer.cardNumber") @PathVariable String cardNumber) {
         transactionService.transfer(transactionDTO, cardNumber);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(CREATED).body(RESOURCE_BUNDLE.getString(OPERATION_TRANSACTION_SUCCESS));
     }
 }
