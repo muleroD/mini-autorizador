@@ -43,7 +43,7 @@ public class TransactionController {
         return ResponseEntity.status(CREATED).body(OPERATION_TRANSACTION_SUCCESS);
     }
 
-    @PostMapping("/deposit")
+    @PostMapping("/deposito")
     @Operation(summary = "operation.transaction.deposit.summary")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "operation.transaction.create.success",
@@ -58,7 +58,7 @@ public class TransactionController {
         return ResponseEntity.status(CREATED).body(OPERATION_TRANSACTION_SUCCESS);
     }
 
-    @PostMapping("/transfer/{cardNumber}")
+    @PostMapping("/transferencia/{cardNumber}")
     @Operation(summary = "operation.transaction.transfer.summary")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "operation.transaction.create.success",

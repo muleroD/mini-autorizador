@@ -11,8 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SufficientBalanceHandler implements ChainHandler {
 
+    private ChainHandler nextChain;
+
     @Override
     public ChainHandler next(ChainHandler nextChain) {
+        this.nextChain = nextChain;
         return nextChain;
     }
 
@@ -23,6 +26,10 @@ public class SufficientBalanceHandler implements ChainHandler {
 
         if (card.getBalance().compareTo(transactionDTO.getAmount()) < 0) {
             throw new InsufficientBalanceException();
+        }
+
+        if (nextChain != null) {
+            nextChain.process(originalRequest, processedRequest);
         }
     }
 }
