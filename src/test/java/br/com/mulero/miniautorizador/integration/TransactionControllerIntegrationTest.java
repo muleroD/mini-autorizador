@@ -88,4 +88,31 @@ class TransactionControllerIntegrationTest extends BaseIntegrationTest {
 
         assertEquals(OPERATION_TRANSACTION_INVALID_PASSWORD, transactionResult);
     }
+
+    @Test
+    void deposit() throws Exception {
+        MvcResult resultBalance;
+
+        CardDTO cardBody = createDefaultCardDto();
+        performPost(URL_CARDS, cardBody);
+
+        String cardNumber = cardBody.getCardNumber();
+        resultBalance = performGet(URL_CARDS + "/" + cardNumber);
+        BigDecimal currentBalance = new BigDecimal(resultBalance.getResponse().getContentAsString());
+        assertEquals(DEFAULT_BALANCE, currentBalance);
+
+        TransactionDTO body = createDefaultTransactionDto();
+        body.setAmount(BigDecimal.valueOf(100));
+
+        MvcResult result = performPost(URL_TRANSACTION_DEPOSIT, body);
+        assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+
+        String transactionResult = result.getResponse().getContentAsString();
+
+        assertEquals(OPERATION_TRANSACTION_SUCCESS, transactionResult);
+
+        resultBalance = performGet(URL_CARDS + "/" + cardNumber);
+        BigDecimal newBalance = new BigDecimal(resultBalance.getResponse().getContentAsString());
+        assertEquals(DEFAULT_BALANCE.add(BigDecimal.valueOf(100)), newBalance);
+    }
 }
