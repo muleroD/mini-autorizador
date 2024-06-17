@@ -8,10 +8,18 @@ public class CardUtil {
 
     private static final Random RANDOM = new Random();
 
-    public static CardDTO createCardDTO() {
+    public static CardDTO createDefaultCardDto() {
+        return getCardDTO("1234567890123456", "1234");
+    }
+
+    public static CardDTO createRandomCardDto() {
+        return getCardDTO(generateCardNumber(), generatePassword());
+    }
+
+    private static CardDTO getCardDTO(String cardNumber, String password) {
         CardDTO cardDTO = new CardDTO();
-        cardDTO.setCardNumber(generateCardNumber());
-        cardDTO.setPassword(generatePassword());
+        cardDTO.setCardNumber(cardNumber);
+        cardDTO.setPassword(password);
         return cardDTO;
     }
 
