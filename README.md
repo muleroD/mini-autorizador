@@ -1,6 +1,6 @@
 # Mini Autorizador
 
-Este é um projeto desenvolvido como parte de um desafio técnico para a VR Benefícios. O Mini Autorizador é uma aplicação
+Este é um projeto desenvolvido como parte de um desafio técnico. O Mini Autorizador é uma aplicação
 Spring Boot com interface REST que simula um sistema de autorização para transações de cartões. Ele permite criar
 cartões com saldo inicial, consultar o saldo e autorizar transações com base em regras específicas.
 
@@ -253,7 +253,7 @@ que podem ocorrer durante a execução das operações.
 
 A documentação da API foi gerada automaticamente a partir das especificações OpenAPI e está disponível para consulta
 em [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). Esta interface não apenas facilita a
-visualização da estrutura da API, mas também permite que desenvolvedores testem os endpoints diretamente pela
+visualização da estrutura da API, mas também permite que desenvolvedores testem os endpoints, diretamente pela
 documentação, promovendo uma integração mais fluida e eficiente.
 
 O uso do OpenAPI no projeto Mini Autorizador contribui para a transparência e acessibilidade da API, garantindo que
